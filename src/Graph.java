@@ -1,0 +1,143 @@
+
+
+public class Graph {
+	
+	private int x;
+	private int y;
+	public int capacity;
+	private int[][] graph;
+	private int[][] tempGraph;	
+	public Graph(int x, int y){
+		this.x=x;
+		this.y=y;
+		capacity=x*y;
+		graph= new int[x][y];
+	}
+	
+	public void changeTempGraph(int[][] x){
+		tempGraph=x;
+		
+	}
+	
+	public void changeGraph(int xCord, int yCord){
+		graph[xCord][yCord]= -1;
+	}
+	
+	public void addElement(int xCord,int yCord,int label){
+		graph[xCord][yCord]= label;
+	}
+	
+	public int[][] returnGraph(){
+		return graph;
+	}
+	public int[][] returnTempGraph(){
+		return tempGraph;
+	}
+	
+	public int countFreeSquares(int graph[][]){
+		int numOfSquares=0;
+		for(int i=0; i < graph.length; i++) {
+			  for(int j=0; j < graph[i].length; j++) {
+			    if(graph[i][j] == 0) {
+			     numOfSquares++;
+			  }
+			}
+		}
+		return numOfSquares;
+	}
+	
+public static int checkFreeSquare(int graph[][]){
+	int numOfSquares=0;
+	for(int i=0; i < graph.length; i++) {
+		  for(int j=0; j < graph[i].length; j++) {
+		    if(graph[i][j] == 0) {
+		     numOfSquares++;
+		  }
+		}
+	}
+	return numOfSquares;
+}
+
+public static int getWeight(int ia[][]){
+	   
+	   int i=ia.length;
+	   int j =ia[0].length;
+	   return (i*j);
+}
+public static int getI(int ia[][]){
+	   
+	   int i=ia.length;
+	   return (i);
+}
+public static int getJ(int ia[][]){
+	   
+	   int j=ia[0].length;
+	   return (j);
+}
+public static void getACopy(int ia[][], int ib[][]){
+	   
+	for(int i=0; i < ia.length; i++) {
+		  for(int j=0; j < ia[i].length; j++) {
+		   ia[i][j] = ib[i][j];
+		    
+		  }
+		}
+	}
+
+public static void addLabel(int ia[][],int label){
+	   
+	for(int i=0; i < ia.length; i++) {
+		  for(int j=0; j < ia[i].length; j++) {
+		   ia[i][j] = label;
+		    
+		  }
+		}
+	}
+
+//replace every instance of the pattern a with the pattern b inside c.
+//find a way to get the dimensions of a 2D array
+public static boolean checkAndReplace(int[][] a, int[][] graph, int[][] tempGraph){
+	
+    for(int i = 0; i < tempGraph.length; i++){
+    	
+        for(int j = 0; j < tempGraph[i].length; j++){
+   	
+            if(tempGraph[i][j] == 0){ //c[i][j] should match up with a[0][0].
+                // Start verifying the rest of A
+                boolean flag = true;
+                for (int k = 0; k < a.length; k++) {
+                    for (int l = 0; l < a[k].length; l++) {
+                        if ((i+k) >= tempGraph.length || (j+l) >= tempGraph[i].length) {
+                            flag = false;
+                           break;
+                        }
+                        if (tempGraph[i+k][j+l] != 0) {
+                            flag = false;
+                        }
+                    }
+                }
+                // If all the values for A were exactly the same, then replace it all with whatever is in B
+                if (flag) {
+                    for (int k = 0; k < a.length; k++) {
+                        for (int l = 0; l < a[k].length; l++) {
+                            tempGraph[i+k][j+l] = a[0][0];
+                            graph[i+k][j+l]=a[0][0];
+                        }
+                    }
+                   return true;
+                }
+                
+                
+            }
+         
+    }
+    
+
+    
+    
+}
+    return false;
+}
+}
+
+
