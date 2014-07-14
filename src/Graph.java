@@ -2,39 +2,9 @@
 
 public class Graph {
 	
-	private int x;
-	private int y;
-	public int capacity;
-	private int[][] graph;
-	private int[][] tempGraph;	
-	public Graph(int x, int y){
-		this.x=x;
-		this.y=y;
-		capacity=x*y;
-		graph= new int[x][y];
-	}
+
 	
-	public void changeTempGraph(int[][] x){
-		tempGraph=x;
-		
-	}
-	
-	public void changeGraph(int xCord, int yCord){
-		graph[xCord][yCord]= -1;
-	}
-	
-	public void addElement(int xCord,int yCord,int label){
-		graph[xCord][yCord]= label;
-	}
-	
-	public int[][] returnGraph(){
-		return graph;
-	}
-	public int[][] returnTempGraph(){
-		return tempGraph;
-	}
-	
-	public int countFreeSquares(int graph[][]){
+	public static int countFreeSquares(int graph[][]){
 		int numOfSquares=0;
 		for(int i=0; i < graph.length; i++) {
 			  for(int j=0; j < graph[i].length; j++) {
@@ -44,6 +14,10 @@ public class Graph {
 			}
 		}
 		return numOfSquares;
+	}
+	
+	public static void colourSquare(int graph[][],int x, int y){
+		graph[x][y]= -1;
 	}
 	
 public static int checkFreeSquare(int graph[][]){

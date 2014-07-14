@@ -26,10 +26,13 @@ public class Item {
    public int x;
    public int y;
    public int[][] dimensions;
+   public int[][] altDimensions;
    
    public double getRatio() {
       return value / weight;
    }
+   
+   
    
    public Item(double value, int x, int y, int label){
 	   this.value=value;
@@ -48,8 +51,10 @@ public class Item {
    }
    public void createItem(){
 	   dimensions=new int[x][y];
+	   altDimensions= new int[y][x];
 	   weight=x*y;
 	   Graph.addLabel(dimensions, label);
+	   Graph.addLabel(altDimensions, label);
    }
    public int getX(){
 	   return x;
