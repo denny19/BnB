@@ -1,7 +1,7 @@
 
 import javax.swing.*;
-import java.awt.Font;
 
+import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,22 +9,25 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout; //imports GridLayout library
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
  
 public class ButtonGrid implements  ActionListener{
  
         JFrame frame; //creates frame
         JPanel titlePanel, itemPanel, componentPanel;
         JButton[][] grid; //names the grid of buttons
-        JButton[][] itemGrid;
+       // JButton[][] itemGrid;
         int width,height;
         JButton resetButton, calButton, addButton,dButton,remButton;
         JLabel heightL,widthL,benefitL;
     	JTextField widthTF,lengthTF,benefitTF;
     	JPanel item;
-    	int widthC,lengthC,benefitC;
+    	int widthC,heightC,benefitC;
     	JPanel totalGUI;
     	JButton  itemGrid2[]= new JButton[80];
-    	Integer counter = 0;
+    	Integer counter = 1;
+    	ArrayList<Item> items = new ArrayList<Item>();
+    	JTextArea resultArea = new JTextArea();
     	
         public void actionPerformed(ActionEvent e) {
         	if(e.getSource() == resetButton)
@@ -41,16 +44,18 @@ public class ButtonGrid implements  ActionListener{
         	else if (e.getSource()== addButton) {
         	
         		widthC = Integer.parseInt(widthTF.getText());
-                lengthC= Integer.parseInt(lengthTF.getText());
+                heightC= Integer.parseInt(lengthTF.getText());
                 benefitC= Integer.parseInt(benefitTF.getText());
-                char upper = (char) ('A' + counter);
-                Character.toString(upper);
-                	String text = ((Character.toString(upper)) + " " + widthTF.getText() + "*" + lengthTF.getText() + " B: " + benefitTF.getText());
+               
+                
+                	String text = ( (counter) + " ," + widthTF.getText() + "*" + lengthTF.getText() + " ,B: " + benefitTF.getText());
                 	itemGrid2[counter] = new JButton("");
                     itemGrid2[counter].setSize(42, 42);
                     itemGrid2[counter].setFont(new Font("Arial", Font.BOLD, 11));
                     itemGrid2[counter].setText( text );
                     componentPanel.add(itemGrid2[counter]);
+                    
+                    items.add(new Item(benefitC,widthC,heightC,counter));
                   
                 counter++;
                 
@@ -61,7 +66,7 @@ public class ButtonGrid implements  ActionListener{
         		int[][]graph = new int[width][height];
         		for(int i=0; i < graph.length; i++) {
       			  for(int j=0; j < graph[i].length; j++) {
-      			    if(itemGrid[i][j].getBackground()==Color.WHITE){
+      			    if(grid[i][j].getBackground()==Color.WHITE){
       			    	graph[i][j]=0;
       			    }
       			    else{
@@ -69,9 +74,35 @@ public class ButtonGrid implements  ActionListener{
       			    }
       			}
       		}
+        		BranchAndBound d = new BranchAndBound(items, graph)	;
+        	
+        	graph=	d.solve();
+        	System.out.println("Solved!");
+        	
+        	   for(int x=0; x<width; x++){
+                   for(int y=0; y<height; y++){
+                   	
+                   		if(graph[x][y]==-1){
+                   			grid[x][y].setBackground(Color.BLACK);
+                   		}
+                   		else	if(graph[x][y]==0){
+                   			grid[x][y].setBackground(Color.WHITE);
+                   		}
+                   		else{
+                   			grid[x][y].setBackground(Color.WHITE);
+                   			String texts= graph[x][y] + "";
+                   			grid[x][y].setText(texts);
+                   		}
+                   	}  
+                      
+                   }
+        	   resultArea.setText(d.returnSol());
+        	   
+           }
+        		
                 	
                 
-           }
+           
         
         
         
@@ -109,7 +140,9 @@ public class ButtonGrid implements  ActionListener{
             titlePanel.setLocation(20, 50);
             titlePanel.setSize(550, 500);
             totalGUI.add(titlePanel);
-            
+            resultArea.setLocation(60,500);
+            resultArea.setSize(400,250);
+            totalGUI.add(resultArea);
         
         //    componentPanel.setLayout(new FlowLayout());
             

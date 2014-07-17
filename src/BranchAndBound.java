@@ -10,6 +10,7 @@ public class BranchAndBound {//
 	  protected int bnbCapacity;
 	  protected int bnbI;
 	  protected int bnbJ;
+	  protected StringBuilder builder;
 	
 	private class Node implements Comparable<Node>{//
 		
@@ -87,8 +88,9 @@ public class BranchAndBound {//
         this.bnbJ=new Integer (Graph.getJ(bnbGraph));
      }
    
-     public void solve() {
+     public int[][] solve() {
     	 //The branch and bound implemetnation
+    	 System.out.println("hiasd");
         
         Collections.sort(babItems, Item.byRatio());//Items sorted by value/weight
         
@@ -169,6 +171,7 @@ public class BranchAndBound {//
                  q.offer(without);
               }
            }
+           
                 
         }
         
@@ -180,32 +183,39 @@ public class BranchAndBound {//
        value = best.nodevalue;
         weight = best.nodeweight;
        items = best.nodetakenItems;
-        approach = "Using Branch and Bound the best feasible solution found";
-        StringBuilder builder = new StringBuilder();
+        approach = "Using Branch and Bound the best solution has been found!";
+        
+         builder = new StringBuilder();
         builder.append(approach);
-        builder.append(": ");
+        builder.append("\n");
+        builder.append("Total Benefit: ");
         builder.append(value);//
-        builder.append(" ");
+        builder.append(" Total weight:");
         builder.append(weight);
         builder.append("\n");
+        builder.append("Take Items:");
         
-        Collections.sort(items, Item.byLabel());
+       Collections.sort(items, Item.byLabel());
         
     	for(int i=0; i < best.nodeGraph.length; i++) {
   		  for(int j=0; j < best.nodeGraph[i].length; j++) {
-  		   System.out.print(best.nodeGraph[i][j]);
+  		   System.out.print((best.nodeGraph[i][j]) );
   		}
   		  System.out.println();
   	}
         
         for (Item item : items) {
            builder.append(item.label);//
-           builder.append(" ");
+           builder.append("  ");
         }
         
         
         System.out.println(builder);
+        return best.nodeGraph;
        
+     }
+     public String returnSol(){
+    	 return builder.toString();
      }
      
      public static void main(String args[]){
