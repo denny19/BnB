@@ -1,6 +1,11 @@
-import javax.swing.*;
 
+import javax.swing.*;
+import java.awt.Font;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout; //imports GridLayout library
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,50 +16,126 @@ public class ButtonGrid implements  ActionListener{
         JPanel titlePanel, itemPanel, componentPanel;
         JButton[][] grid; //names the grid of buttons
         JButton[][] itemGrid;
-        int width,length;
-        JButton resetButton, testButton, addButton;
-        JLabel lengthL,widthL,benefitL;
+        int width,height;
+        JButton resetButton, calButton, addButton,dButton,remButton;
+        JLabel heightL,widthL,benefitL;
     	JTextField widthTF,lengthTF,benefitTF;
     	JPanel item;
-    	GridComponent component;
-    	int widthC,lengthC;
-    	  
+    	int widthC,lengthC,benefitC;
+    	JPanel totalGUI;
+    	JButton  itemGrid2[]= new JButton[80];
+    	Integer counter = 0;
+    	
+        public void actionPerformed(ActionEvent e) {
+        	if(e.getSource() == resetButton)
+            {
+        		   for(int x=0; x<width; x++){
+                       for(int y=0; y<height; y++){
+                       	
+                       		grid[x][y].setBackground(Color.WHITE);
+                       	}  
+                          
+                       }
+               }
+        	
+        	else if (e.getSource()== addButton) {
+        	
+        		widthC = Integer.parseInt(widthTF.getText());
+                lengthC= Integer.parseInt(lengthTF.getText());
+                benefitC= Integer.parseInt(benefitTF.getText());
+                char upper = (char) ('A' + counter);
+                Character.toString(upper);
+                	String text = ((Character.toString(upper)) + " " + widthTF.getText() + "*" + lengthTF.getText() + " B: " + benefitTF.getText());
+                	itemGrid2[counter] = new JButton("");
+                    itemGrid2[counter].setSize(42, 42);
+                    itemGrid2[counter].setFont(new Font("Arial", Font.BOLD, 11));
+                    itemGrid2[counter].setText( text );
+                    componentPanel.add(itemGrid2[counter]);
+                  
+                counter++;
+                
+           }
+        	
+        	else if (e.getSource()== calButton) {
+            	
+        		int[][]graph = new int[width][height];
+        		for(int i=0; i < graph.length; i++) {
+      			  for(int j=0; j < graph[i].length; j++) {
+      			    if(itemGrid[i][j].getBackground()==Color.WHITE){
+      			    	graph[i][j]=0;
+      			    }
+      			    else{
+      			    	graph[i][j]=-1;
+      			    }
+      			}
+      		}
+                	
+                
+           }
         
-        public JPanel createContentPane (int width,int length){
-        	JPanel totalGUI = new JPanel();
+        
+        
+        	
+                
+        	else{
+          
+            for(int x=0; x<width; x++){
+                for(int y=0; y<height; y++){
+                	if(e.getSource() == grid[x][y]){
+                		if(grid[x][y].getBackground()==Color.WHITE){
+                			grid[x][y].setBackground(Color.BLACK);
+                		}
+                		else{
+                			grid[x][y].setBackground(Color.WHITE);
+                		}
+                	}  
+                   
+                }
+        }
+        	}
+        		totalGUI.revalidate();
+    		// frame.validate();  
+           
+        }
+        public ButtonGrid(int width, int length){ //constructor
+        	frame=new JFrame("Town Planning");
+        	 totalGUI= new JPanel();
         	this.width=width;
-        	this.length=length;
+        	this.height=length;
             totalGUI.setLayout(null);  
             grid=new JButton[width][length]; //allocate the size of grid
             titlePanel = new JPanel();
             titlePanel.setLayout(null);
             titlePanel.setLocation(20, 50);
-            titlePanel.setSize(300, 500);
+            titlePanel.setSize(550, 500);
             totalGUI.add(titlePanel);
+            
+        
+        //    componentPanel.setLayout(new FlowLayout());
             
            
             
             resetButton = new JButton("Reset");
-            resetButton.setLocation(30*(length+1), 0);
-            resetButton.setSize(100, 30);
+            resetButton.setLocation(42*(length+1), 0);
+            resetButton.setSize(70, 42);
             resetButton.addActionListener(this);
             titlePanel.add(resetButton);
             
             
             
-            testButton = new JButton("400*30");
-           testButton.setLocation(0, 400);
-            testButton.setSize(400, 30);
-            testButton.addActionListener(this);
-            titlePanel.add(testButton);
+            calButton = new JButton("Calculate!");
+           calButton.setLocation(60, 400);
+            calButton.setSize(250, 30);
+            calButton.addActionListener(this);
+            titlePanel.add(calButton);
             
             
             for(int x=0; x<width; x++){
                     for(int y=0; y<length; y++){
                             grid[x][y]=new JButton(""); //creates new button     
                             //adds button to grid
-                            grid[x][y].setLocation(y*30,  x*30);
-                            grid[x][y].setSize(30, 30);
+                            grid[x][y].setLocation(y*42,  x*42);
+                            grid[x][y].setSize(42, 42);
                             grid[x][y].addActionListener(this);
                             grid[x][y].setBackground(Color.WHITE);
                            titlePanel.add(grid[x][y]); 
@@ -63,15 +144,15 @@ public class ButtonGrid implements  ActionListener{
             
             itemPanel = new JPanel();
             itemPanel.setLayout(null);
-            itemPanel.setLocation(40*(length+3), 50);
-            itemPanel.setSize(500, 500);
+            itemPanel.setLocation(600, 50);
+            itemPanel.setSize(45*width, 45*length);
             totalGUI.add(itemPanel);
             
-            lengthL = new JLabel("Length");
-            lengthL.setLocation(0, 0);
-            lengthL.setSize(100, 20);
-            lengthL.setForeground(Color.black);
-            itemPanel.add(lengthL);
+            heightL = new JLabel("Height");
+            heightL.setLocation(0, 0);
+            heightL.setSize(100, 20);
+            heightL.setForeground(Color.black);
+            itemPanel.add(heightL);
             
             widthL = new JLabel("Width");
             widthL.setLocation(0, 40);
@@ -108,83 +189,28 @@ public class ButtonGrid implements  ActionListener{
            addButton.setSize(100, 30);
             addButton.addActionListener(this);
             itemPanel.add(addButton);
-         
+      
+            
             componentPanel = new JPanel();
-            componentPanel.setLayout(null);
-            componentPanel.setLocation(500,400);
-            componentPanel.setSize(300, 500);
+            componentPanel.setLayout(new FlowLayout());
+            componentPanel.setLocation(600,300);
+            componentPanel.setSize(500, 500);  
             totalGUI.add( componentPanel);
-            
-            
-            totalGUI.setOpaque(true);
-            return totalGUI;
-        }
-        
-    
-        public void actionPerformed(ActionEvent e) {
-        	if(e.getSource() == resetButton)
-            {
-        		   for(int x=0; x<width; x++){
-                       for(int y=0; y<length; y++){
-                       	
-                       		grid[x][y].setBackground(Color.WHITE);
-                       	}  
-                          
-                       }
-               }
-        	
-        	else if (e.getSource()== addButton) {
-        		
-        	/*	widthC=Integer.parseInt(widthTF.getText());
-        		lengthC=Integer.parseInt(lengthTF.getText());
-        		 itemGrid=new JButton[widthC][lengthC];  
-        		 for(int x=0; x<widthC; x++){
-                     for(int y=0; y<lengthC; y++){
-                             itemGrid[x][y]=new JButton(""); //creates new button     
-                             //adds button to grid
-                             itemGrid[x][y].setLocation(y*30,  x*30);
-                             itemGrid[x][y].setSize(30, 30);
-                             itemGrid[x][y].addActionListener(this);
-                             itemGrid[x][y].setBackground(Color.WHITE);
-                            componentPanel.add(itemGrid[x][y]); 
-                     }
-             }
-        		
-        		frame.revalidate(); 
-        		frame.validate();*/
-        		componentPanel.add(new JButton("Button"));
-        		componentPanel.revalidate();
-        		 frame.validate();
-        	}
-                
-        	else{
+       
           
-            for(int x=0; x<width; x++){
-                for(int y=0; y<length; y++){
-                	if(e.getSource() == grid[x][y]){
-                		if(grid[x][y].getBackground()==Color.WHITE){
-                			grid[x][y].setBackground(Color.BLACK);
-                		}
-                		else{
-                			grid[x][y].setBackground(Color.WHITE);
-                		}
-                	}  
-                   
-                }
-        }
-        	}
-              
-           
-        }
-        public ButtonGrid(int width, int length){ //constructor
-        	frame=new JFrame("Town Planning");
-                frame.setContentPane(createContentPane(width,length));
+        
+         
+         totalGUI.setOpaque(true);
+         totalGUI.setPreferredSize(new Dimension(1000,1000));
+         JScrollPane scrPane= new JScrollPane(totalGUI);
+        	frame.getContentPane().add(scrPane);
+        	
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setSize(600, 400);
-              // frame.pack(); //sets appropriate size for frame
+              //  frame.setSize(400, 400);
+               frame.pack(); //sets appropriate size for frame
                 frame.setVisible(true); //makes frame visible
         }
         public static void main(String[] args) {
-                new ButtonGrid(10,6);//makes new ButtonGrid with 2 parameters
+                new ButtonGrid(9,9);//makes new ButtonGrid with 2 parameters
         }
 }

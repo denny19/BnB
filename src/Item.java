@@ -20,7 +20,7 @@ public class Item {
       };
    }
    
-   public int label;
+   public String label;
    public double value;
    public double weight;
    public int x;
@@ -34,7 +34,7 @@ public class Item {
    
    
    
-   public Item(double value, int x, int y, int label){
+   public Item(double value, int x, int y, String label){
 	   this.value=value;
 	   this.x=x;
 	   this.label=label;//
