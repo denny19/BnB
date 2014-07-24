@@ -2,8 +2,6 @@
 
 import java.util.*;
 
-
-
 public class BranchAndBound {//
 	  protected List<Item> babItems;//The items that needs to be fit inside the map
 	  protected int bnbGraph[][];//the Map of the area
@@ -109,10 +107,17 @@ public class BranchAndBound {//
            if (node.nodebound > best.nodevalue ) {//if a better solution is available
         	   
         	   Node with = new Node(node);
+        	   do{
         	   
         	   //an item is added to the state space to see if it gives a better solution
         	   
                Item item = babItems.get(i);//
+               if(i==0){
+            	   
+               }
+               else{
+            	   with.nodeweight-=babItems.get(i-1).weight;
+               }
                with.nodeweight += item.weight;
              
                if (with.nodeweight <= bnbCapacity) {
@@ -140,38 +145,42 @@ public class BranchAndBound {//
             	   
             	   } while(cantReplace==true);
                 }
-        	   
-               
-               //Now the item will be tried in the vertical orientation to be added
-               if (with.nodeweight <= bnbCapacity) {
-            	   //add vertical as well
-            	   int tempGraph[][] = new int[bnbI][bnbJ];
-            	   Graph.getACopy(tempGraph,with.nodeGraph);
-            	   boolean cantReplace=true;
-            	   do{
-            		 //do loop used to make sure this item has been added in as many ways as possible in the vertical orientation
-            	   Node withVertical = new Node(with,true);
-            	   if(Graph.checkAndReplace(item.altDimensions,withVertical.nodeGraph,tempGraph)==true){
-                   //Item tried to be added in the vertical orientation
-                   withVertical.nodetakenItems.add(item);
-                   withVertical.nodevalue += item.value;
-                   withVertical.computeBound();
-                   //a new bound and new value is calculated for the node
-                   if (withVertical.nodevalue > best.nodevalue) {
-                      best = withVertical;
-                   }
-                   if (withVertical.nodebound > best.nodevalue) {
-                      q.offer(withVertical);
-                   }
-               }
-            	   else{cantReplace=false;}
-            	   
-            	   } while(cantReplace==true);
-                }
+               i++;
+        	   }while(i<babItems.size());
+           }
+        }
+        
+//        	   
+//               
+//            //   Now the item will be tried in the vertical orientation to be added
+//               if (with.nodeweight <= bnbCapacity) {
+//           	   //add vertical as well
+//            	   int tempGraph[][] = new int[bnbI][bnbJ];
+//            	   Graph.getACopy(tempGraph,with.nodeGraph);
+//            	   boolean cantReplace=true;
+//            	   do{
+////            		 //do loop used to make sure this item has been added in as many ways as possible in the vertical orientation
+//            	   Node withVertical = new Node(with,true);
+//            	   if(Graph.checkAndReplace(item.altDimensions,withVertical.nodeGraph,tempGraph)==true){
+//                   //Item tried to be added in the vertical orientation
+//                   withVertical.nodetakenItems.add(item);
+//                   withVertical.nodevalue += item.value;
+//                   withVertical.computeBound();
+//                   //a new bound and new value is calculated for the node
+//                   if (withVertical.nodevalue > best.nodevalue) {
+//                      best = withVertical;
+//                   }
+//                   if (withVertical.nodebound > best.nodevalue) {
+//                     q.offer(withVertical);
+//                   }
+//               }
+//            	   else{cantReplace=false;}
+//            	   
+//            	   } while(cantReplace==true);
+//                }
                
            
-           i++;
-        }
+  //      }
 //           Iterator<Node> iter =q.iterator();
 //           
 //           if(q.size()>300){
@@ -183,7 +192,7 @@ public class BranchAndBound {//
 //               // do something with current
 //           }
 //           }
-        }
+       
      
                 
         
@@ -235,16 +244,16 @@ public class BranchAndBound {//
     	 final long startTime = System.currentTimeMillis();
     		ArrayList<Item> items = new ArrayList<Item>();//Items to be fitted inside the map
     	
-    		items.add(new Item(3,2,1,1));
+    		items.add(new Item(3,1,2,1));
     		items.add(new Item(8,2,2,2));
-    		items.add(new Item(4,3,1,3));
+    		//items.add(new Item(4,3,1,3));
     	//	items.add(new Item(3,4,2,4));
     	//	items.add(new Item(4,8,2,5));
     		
-    		int square[][] = new int[8][6];//Dimensions of the map
-    		Graph.colourSquare(square, 1, 2);//To colour a certain square to make it redundant
-    		Graph.colourSquare(square, 3, 4);
-    		Graph.colourSquare(square, 5, 2);
+    		int square[][] = new int[3][3];//Dimensions of the map
+    		Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
+    	//	Graph.colourSquare(square, 3, 4);
+    	//	Graph.colourSquare(square, 5, 2);
     	BranchAndBound x = new BranchAndBound(items, square)	;
     	x.solve();
     	final long endTime = System.currentTimeMillis();
