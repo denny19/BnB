@@ -58,24 +58,29 @@ public class BranchAndBound {//
 	
     public void computeBound() {
     	//Used to compute the bound of a node
-        int i = nodelevel;
+        int i = 0;
         double w = nodeweight;
         nodebound = nodevalue;//the nodebound is changed to the node value and then subsequent items from the items available are added
         //together to get the new node bound
         Item item;
-       
+   do{
         do {
-           item = babItems.get(0);
+           item = babItems.get(i);
            if (w + item.weight > bnbCapacity) break;
                     w += item.weight;//item is taken in the node
            nodebound += item.value;
           
-                } while (i!=2);//
-        nodebound += (bnbCapacity - w) * (item.getRatio());//and fractional items are added. change to integer bound not fractional??
-     }
+                } while (i!=-1);//
+      i++;
+     
+    }while(i<babItems.size());
     
     
+    }
 	}
+    
+    
+	
     public BranchAndBound (List<Item> items, int graph[][]) {//
     	//The main program with data related to the items and data on how the graph looks like
         this.babItems = items;
@@ -148,7 +153,7 @@ public class BranchAndBound {//
         
         
 
-               if (with.nodeweight <= bnbCapacity) {
+               if (with.nodeweight <= bnbCapacity && item.isSquare==false ) {
 //           	   //add vertical as well
             	   int tempGraph[][] = new int[bnbI][bnbJ];
             	   Graph.getACopy(tempGraph,with.nodeGraph);
@@ -177,20 +182,21 @@ public class BranchAndBound {//
                i++;
         	   }while(i<babItems.size());
            }
+//           Iterator<Node> iter =q.iterator();
+//           
+//           if(q.size()>100){
+//           while (iter.hasNext()) {
+//           Node    current = iter.next();
+//           if(current.nodebound<=best.nodevalue){
+//        	   q.remove(current);
+//           }
+//               // do something with current
+//           }
+//           }
         }
            
 
-        Iterator<Node> iter =q.iterator();
-        
-        if(q.size()>300){
-        while (iter.hasNext()) {
-        Node    current = iter.next();
-        if(current.nodebound<=best.nodevalue){
-     	   q.remove(current);
-        }
-            // do something with current
-        }
-        }
+   
 
        
      
@@ -247,13 +253,13 @@ public class BranchAndBound {//
     	
     		items.add(new Item(3,1,2,1));
     		items.add(new Item(8,2,2,2));
-    		//items.add(new Item(4,3,1,3));
+    	//	items.add(new Item(4,3,1,3));
     	//	items.add(new Item(3,4,2,4));
     	//	items.add(new Item(4,8,2,5));
     		
-    		int square[][] = new int[5][5];//Dimensions of the map
+    		int square[][] = new int[6][6];//Dimensions of the map
     		Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
-    	//	Graph.colourSquare(square, 3, 4);
+    		Graph.colourSquare(square, 3, 4);
     	//	Graph.colourSquare(square, 5, 2);
     	BranchAndBound x = new BranchAndBound(items, square)	;
     	x.solve();

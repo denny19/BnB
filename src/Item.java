@@ -2,6 +2,8 @@
 
 import java.util.Comparator;
 
+import sun.nio.cs.ext.ISCII91;
+
 public class Item {
 
    public static Comparator<Item> byLabel() {
@@ -21,6 +23,7 @@ public class Item {
    }
    
    public int label;
+   public boolean isSquare;
    public double value;
    public double weight;
    public int x;
@@ -52,6 +55,12 @@ public class Item {
    public void createItem(){
 	   dimensions=new int[x][y];
 	   altDimensions= new int[y][x];
+	   if(x==y){
+		   isSquare=true;
+	   }
+	   else{
+		   isSquare=false;
+	   }
 	   weight=x*y;
 	   Graph.addLabel(dimensions, label);
 	   Graph.addLabel(altDimensions, label);
