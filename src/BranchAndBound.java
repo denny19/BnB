@@ -145,53 +145,53 @@ public class BranchAndBound {//
             	   
             	   } while(cantReplace==true);
                 }
+        
+        
+
+               if (with.nodeweight <= bnbCapacity) {
+//           	   //add vertical as well
+            	   int tempGraph[][] = new int[bnbI][bnbJ];
+            	   Graph.getACopy(tempGraph,with.nodeGraph);
+            	   boolean cantReplace=true;
+            	   do{
+            		 //do loop used to make sure this item has been added in as many ways as possible in the vertical orientation
+            	   Node withVertical = new Node(with,true);
+            	   if(Graph.checkAndReplace(item.altDimensions,withVertical.nodeGraph,tempGraph)==true){
+                   //Item tried to be added in the vertical orientation
+                   withVertical.nodetakenItems.add(item);
+                   withVertical.nodevalue += item.value;
+                   withVertical.computeBound();
+                   //a new bound and new value is calculated for the node
+                   if (withVertical.nodevalue > best.nodevalue) {
+                      best = withVertical;
+                   }
+                   if (withVertical.nodebound > best.nodevalue) {
+                     q.offer(withVertical);
+                   }
+               }
+           	   else{cantReplace=false;}
+            	   
+            	   } while(cantReplace==true);
+                }
+               
                i++;
         	   }while(i<babItems.size());
            }
         }
-        
-//        	   
-//               
-//            //   Now the item will be tried in the vertical orientation to be added
-//               if (with.nodeweight <= bnbCapacity) {
-//           	   //add vertical as well
-//            	   int tempGraph[][] = new int[bnbI][bnbJ];
-//            	   Graph.getACopy(tempGraph,with.nodeGraph);
-//            	   boolean cantReplace=true;
-//            	   do{
-////            		 //do loop used to make sure this item has been added in as many ways as possible in the vertical orientation
-//            	   Node withVertical = new Node(with,true);
-//            	   if(Graph.checkAndReplace(item.altDimensions,withVertical.nodeGraph,tempGraph)==true){
-//                   //Item tried to be added in the vertical orientation
-//                   withVertical.nodetakenItems.add(item);
-//                   withVertical.nodevalue += item.value;
-//                   withVertical.computeBound();
-//                   //a new bound and new value is calculated for the node
-//                   if (withVertical.nodevalue > best.nodevalue) {
-//                      best = withVertical;
-//                   }
-//                   if (withVertical.nodebound > best.nodevalue) {
-//                     q.offer(withVertical);
-//                   }
-//               }
-//            	   else{cantReplace=false;}
-//            	   
-//            	   } while(cantReplace==true);
-//                }
-               
            
-  //      }
-//           Iterator<Node> iter =q.iterator();
-//           
-//           if(q.size()>300){
-//           while (iter.hasNext()) {
-//           Node    current = iter.next();
-//           if(current.nodebound<=best.nodevalue){
-//        	   q.remove(current);
-//           }
-//               // do something with current
-//           }
-//           }
+
+        Iterator<Node> iter =q.iterator();
+        
+        if(q.size()>300){
+        while (iter.hasNext()) {
+        Node    current = iter.next();
+        if(current.nodebound<=best.nodevalue){
+     	   q.remove(current);
+        }
+            // do something with current
+        }
+        }
+
        
      
                 
@@ -236,6 +236,7 @@ public class BranchAndBound {//
         return best.nodeGraph;
        
      }
+     
      public String returnSol(){
     	 return builder.toString();
      }
@@ -250,7 +251,7 @@ public class BranchAndBound {//
     	//	items.add(new Item(3,4,2,4));
     	//	items.add(new Item(4,8,2,5));
     		
-    		int square[][] = new int[3][3];//Dimensions of the map
+    		int square[][] = new int[5][5];//Dimensions of the map
     		Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
     	//	Graph.colourSquare(square, 3, 4);
     	//	Graph.colourSquare(square, 5, 2);
