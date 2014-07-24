@@ -65,17 +65,17 @@ public class BranchAndBound {//
         nodebound = nodevalue;//the nodebound is changed to the node value and then subsequent items from the items available are added
         //together to get the new node bound
         Item item;
-        if(i<babItems.size()){
+       
         do {
-           item = babItems.get(i);
+           item = babItems.get(0);
            if (w + item.weight > bnbCapacity) break;
                     w += item.weight;//item is taken in the node
            nodebound += item.value;
-           i++;
-                } while (i < babItems.size());//
-        nodebound += (bnbCapacity - w) * (item.getRatio());//change to integer bound not fractional??
+          
+                } while (i!=2);//
+        nodebound += (bnbCapacity - w) * (item.getRatio());//and fractional items are added. change to integer bound not fractional??
      }
-    }
+    
     
 	}
     public BranchAndBound (List<Item> items, int graph[][]) {//
@@ -90,7 +90,7 @@ public class BranchAndBound {//
    
      public int[][] solve() {
     	 //The branch and bound implemetnation
-    	 System.out.println("hiasd");
+    	
         
         Collections.sort(babItems, Item.byRatio());//Items sorted by value/weight
         
@@ -104,11 +104,15 @@ public class BranchAndBound {//
         
         while (!q.isEmpty()) {
            Node node = q.poll();
-           
-           if (node.nodebound > best.nodevalue && node.nodelevel < babItems.size() ) {//if a better solution is available
+           int i=0;
+                
+           if (node.nodebound > best.nodevalue ) {//if a better solution is available
+        	   
         	   Node with = new Node(node);
+        	   
         	   //an item is added to the state space to see if it gives a better solution
-               Item item = babItems.get(node.nodelevel);//
+        	   
+               Item item = babItems.get(i);//
                with.nodeweight += item.weight;
              
                if (with.nodeweight <= bnbCapacity) {
@@ -136,6 +140,7 @@ public class BranchAndBound {//
             	   
             	   } while(cantReplace==true);
                 }
+        	   
                
                //Now the item will be tried in the vertical orientation to be added
                if (with.nodeweight <= bnbCapacity) {
@@ -163,17 +168,25 @@ public class BranchAndBound {//
             	   
             	   } while(cantReplace==true);
                 }
-     
-              Node without = new Node(node);//A new node in the same level which considers the scenario were the item is not added
-              without.computeBound();//
-              
-              if (without.nodebound > best.nodevalue) {//if this bound is better the value of the best noded then added to the queue
-                 q.offer(without);
-              }
-           }
+               
            
-                
+           i++;
         }
+//           Iterator<Node> iter =q.iterator();
+//           
+//           if(q.size()>300){
+//           while (iter.hasNext()) {
+//           Node    current = iter.next();
+//           if(current.nodebound<=best.nodevalue){
+//        	   q.remove(current);
+//           }
+//               // do something with current
+//           }
+//           }
+        }
+     
+                
+        
         
         String approach;
         List<Item> items;//Solution has been found
@@ -228,9 +241,10 @@ public class BranchAndBound {//
     	//	items.add(new Item(3,4,2,4));
     	//	items.add(new Item(4,8,2,5));
     		
-    		int square[][] = new int[3][3];//Dimensions of the map
+    		int square[][] = new int[8][6];//Dimensions of the map
     		Graph.colourSquare(square, 1, 2);//To colour a certain square to make it redundant
-
+    		Graph.colourSquare(square, 3, 4);
+    		Graph.colourSquare(square, 5, 2);
     	BranchAndBound x = new BranchAndBound(items, square)	;
     	x.solve();
     	final long endTime = System.currentTimeMillis();

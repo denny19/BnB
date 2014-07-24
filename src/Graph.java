@@ -68,8 +68,7 @@ public static void addLabel(int ia[][],int label){
 		}
 	}
 
-//replace every instance of the pattern a with the pattern b inside c.
-//find a way to get the dimensions of a 2D array
+//checks if pattern a will fit inside tempGraph. It checks for free squares denoted by 0;
 public static boolean checkAndReplace(int[][] a, int[][] graph, int[][] tempGraph){
 	
     for(int i = 0; i < tempGraph.length; i++){
@@ -90,7 +89,7 @@ public static boolean checkAndReplace(int[][] a, int[][] graph, int[][] tempGrap
                         }
                     }
                 }
-                // If all the values for A were exactly the same, then replace it all with whatever is in B
+                // If there are free spaces then place pattern a inside tempGraph
                 if (flag) {
                     for (int k = 0; k < a.length; k++) {
                         for (int l = 0; l < a[k].length; l++) {

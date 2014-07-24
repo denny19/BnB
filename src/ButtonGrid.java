@@ -20,7 +20,7 @@ public class ButtonGrid implements  ActionListener{
         int width,height;
         JButton resetButton, calButton, addButton,dButton,remButton;
         JLabel heightL,widthL,benefitL;
-    	JTextField widthTF,lengthTF,benefitTF;
+    	JTextField widthTF,heightTF,benefitTF;
     	JPanel item;
     	int widthC,heightC,benefitC;
     	JPanel totalGUI;
@@ -44,11 +44,11 @@ public class ButtonGrid implements  ActionListener{
         	else if (e.getSource()== addButton) {
         	
         		widthC = Integer.parseInt(widthTF.getText());
-                heightC= Integer.parseInt(lengthTF.getText());
+                heightC= Integer.parseInt(heightTF.getText());
                 benefitC= Integer.parseInt(benefitTF.getText());
                
                 
-                	String text = ( (counter) + " ," + widthTF.getText() + "*" + lengthTF.getText() + " ,B: " + benefitTF.getText());
+                	String text = ( (counter) + " ," + widthTF.getText() + "*" + heightTF.getText() + " ,B: " + benefitTF.getText());
                 	itemGrid2[counter] = new JButton("");
                     itemGrid2[counter].setSize(42, 42);
                     itemGrid2[counter].setFont(new Font("Arial", Font.BOLD, 11));
@@ -178,17 +178,17 @@ public class ButtonGrid implements  ActionListener{
             itemPanel = new JPanel();
             itemPanel.setLayout(null);
             itemPanel.setLocation(600, 50);
-            itemPanel.setSize(45*width, 45*length);
+            itemPanel.setSize(400, 300);
             totalGUI.add(itemPanel);
             
             heightL = new JLabel("Height");
-            heightL.setLocation(0, 0);
+            heightL.setLocation(0, 40);
             heightL.setSize(100, 20);
             heightL.setForeground(Color.black);
             itemPanel.add(heightL);
             
             widthL = new JLabel("Width");
-            widthL.setLocation(0, 40);
+            widthL.setLocation(0, 0);
             widthL.setSize(100, 20);
             widthL.setForeground(Color.black);
             itemPanel.add(widthL);
@@ -199,15 +199,15 @@ public class ButtonGrid implements  ActionListener{
             benefitL.setForeground(Color.black);
             itemPanel.add(benefitL);
       
-            lengthTF = new JTextField(5);
-            lengthTF.setText(1 + "");
-            lengthTF.setLocation(100,0);
-            lengthTF.setSize(100, 20);
-    		itemPanel.add(lengthTF);
+            heightTF = new JTextField(5);
+            heightTF.setText(1 + "");
+            heightTF.setLocation(100,40);
+            heightTF.setSize(100, 20);
+    		itemPanel.add(heightTF);
     		
     		widthTF = new JTextField(1);
             widthTF.setText(1 + "");
-            widthTF.setLocation(100,40);
+            widthTF.setLocation(100,0);
             widthTF.setSize(100, 20);
     		itemPanel.add(widthTF);
     		
@@ -218,7 +218,7 @@ public class ButtonGrid implements  ActionListener{
     		itemPanel.add(benefitTF);
     		
     		addButton = new JButton("Add Item");
-            addButton.setLocation(30*(length+1), 0);
+            addButton.setLocation(220, 0);
            addButton.setSize(100, 30);
             addButton.addActionListener(this);
             itemPanel.add(addButton);
@@ -244,6 +244,6 @@ public class ButtonGrid implements  ActionListener{
                 frame.setVisible(true); //makes frame visible
         }
         public static void main(String[] args) {
-                new ButtonGrid(9,9);//makes new ButtonGrid with 2 parameters
+                new ButtonGrid(8,6);//makes new ButtonGrid with 2 parameters
         }
 }
