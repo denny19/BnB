@@ -25,7 +25,7 @@ public class Item {
    public int label;
    public boolean isSquare;
    public double value;
-   public double weight;
+   public int weight;
    public int x;
    public int y;
    public int[][] dimensions;

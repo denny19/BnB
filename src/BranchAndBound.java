@@ -16,7 +16,7 @@ public class BranchAndBound {//
 		List<Item> nodetakenItems;//taken items inside this node
 		public double nodebound;//bound of this node
 		public double nodevalue;//value already inside this node
-		public double nodeweight;//weight of this node 
+		public int nodeweight;//weight of this node 
 		public int nodeGraph[][];//the Map for this node with the nodes items fitted inside
 			
 	public Node(){
@@ -53,13 +53,22 @@ public class BranchAndBound {//
 	
 	
 	public int compareTo(Node other){//used to order nodes
-		return (int) (other.nodebound - nodebound);
+		
+		double i ;
+	
+		i= other.nodebound - nodebound;
+		if(i!=0)return (int) i;
+		i=other.nodevalue-nodevalue;
+		if(i!=0) return (int) i;
+		
+	
+		return (int) ((other.nodelevel) - (nodelevel));
 	}
 	
     public void computeBound() {
     	//Used to compute the bound of a node
         int i = 0;
-        double w = nodeweight;
+        int w = nodeweight;
         nodebound = nodevalue;//the nodebound is changed to the node value and then subsequent items from the items available are added
         //together to get the new node bound
         Item item;
@@ -140,10 +149,13 @@ public class BranchAndBound {//
                    withHoriz.computeBound();
                    //a new bound and new value is calculated for the node
                    if (withHoriz.nodevalue > best.nodevalue) {
-                      best = withHoriz;//if this solution was better the best solution found so far then change this solution to be the best
+                	   best = withHoriz;//if this solution was better the best solution found so far then change this solution to be the best
                    }
                    if (withHoriz.nodebound > best.nodevalue) {
                       q.offer(withHoriz);//if this solution has a better bound than the bound for the best value
+                   }
+                   else{
+                	   cantReplace=false;
                    }
                }
             	   else{cantReplace=false;}
@@ -172,6 +184,9 @@ public class BranchAndBound {//
                    }
                    if (withVertical.nodebound > best.nodevalue) {
                      q.offer(withVertical);
+                   }
+                   else{
+                	   cantReplace=false;
                    }
                }
            	   else{cantReplace=false;}
@@ -257,7 +272,7 @@ public class BranchAndBound {//
     	//	items.add(new Item(3,4,2,4));
     	//	items.add(new Item(4,8,2,5));
     		
-    		int square[][] = new int[6][6];//Dimensions of the map
+    		int square[][] = new int[5][6];//Dimensions of the map
     		Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
     		Graph.colourSquare(square, 3, 4);
     	//	Graph.colourSquare(square, 5, 2);
