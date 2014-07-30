@@ -1,14 +1,17 @@
 
 
 import java.util.*;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class BranchAndBound {//
 	  protected List<Item> babItems;//The items that needs to be fit inside the map
 	  protected int bnbGraph[][];//the Map of the area
 	  protected int bnbCapacity;
+	  protected int bnbSpecial;
 	  protected int bnbI;
 	  protected int bnbJ;
 	  protected StringBuilder builder;
+	  protected int counter=0;
 	
 	private class Node implements Comparable<Node>{//
 		
@@ -55,38 +58,88 @@ public class BranchAndBound {//
 	public int compareTo(Node other){//used to order nodes
 		
 		double i ;
-	
 		i= other.nodebound - nodebound;
 		if(i!=0)return (int) i;
 		i=other.nodevalue-nodevalue;
 		if(i!=0) return (int) i;
+	
+		
 		
 	
 		return (int) ((other.nodelevel) - (nodelevel));
 	}
 	
-    public void computeBound() {
-    	//Used to compute the bound of a node
-        int i = 0;
-        int w = nodeweight;
-        nodebound = nodevalue;//the nodebound is changed to the node value and then subsequent items from the items available are added
-        //together to get the new node bound
-        Item item;
-   do{
-        do {
-           item = babItems.get(i);
-           if (w + item.weight > bnbCapacity) break;
-                    w += item.weight;//item is taken in the node
-           nodebound += item.value;
-          
-                } while (i!=-1);//
-      i++;
-     
-    }while(i<babItems.size());
-    
-    
-    }
-	}
+//    public void computeBound() {
+//    	//Used to compute the bound of a node
+//        int i = 0;
+//        int w = nodeweight;
+//        boolean finished=true;
+//        boolean finished2=true;
+//        nodebound = nodevalue;//the nodebound is changed to the node value and then subsequent items from the items available are added
+//        //together to get the new node bound
+//        Item item;
+//        int[][] tempGraph =new int[bnbI][bnbJ];;
+//        Graph.getACopy( tempGraph,nodeGraph);
+//   do{
+//        do {
+//           item = babItems.get(i);
+//           if (w + item.weight > bnbCapacity) break;
+//           if(Graph.checkAndReplace(item.dimensions,  tempGraph)==true){
+//                    w += item.weight;//item is taken in the node
+//           nodebound += item.value;
+//           }
+//           else{
+//        	   finished=false;
+//           }
+//           if(item.isSquare==false){
+//           if(Graph.checkAndReplace(item.altDimensions,  tempGraph)==true ){
+//               w += item.weight;//item is taken in the node
+//      nodebound += item.value;
+//      }
+//           else{
+//        	   finished2=false;
+//           }
+//           }
+//         
+//                } while (( finished!=false )&& (finished2!=false));//
+//      i++;
+//     
+//    }while(i<babItems.size());
+//    
+//    
+//    }
+	 public void computeBound() {
+	    	//Used to compute the bound of a node
+	        int i = 0;
+	        int w = nodeweight;
+	        nodebound = nodevalue;//the nodebound is changed to the node value and then subsequent items from the items available are added
+	        //together to get the new node bound
+	        Item item;
+	        boolean firstTime =true;
+	   do{
+		   firstTime=true;
+	        do {
+	           item = babItems.get(i);
+	           if (w + item.weight > bnbCapacity) break;
+	           if(firstTime==true){
+	        	 if(  Graph.checkAndReplace(item.dimensions,  nodeGraph)==false){
+	        		break; 
+	        	 }
+	        	 firstTime=false;
+	           }
+	                    w += item.weight;//item is taken in the node
+	           nodebound += item.value;
+	          
+	                } while (i!=-1);//
+	      i++;
+	     
+	    }while(i<babItems.size());
+	    
+	    
+	    }
+		}
+	
+	
     
     
 	
@@ -98,6 +151,7 @@ public class BranchAndBound {//
         this.bnbCapacity=  Graph.checkFreeSquare(bnbGraph);
         this.bnbI=   new Integer (Graph.getI(bnbGraph));
         this.bnbJ=new Integer (Graph.getJ(bnbGraph));
+        
      }
    
      public int[][] solve() {
@@ -105,16 +159,21 @@ public class BranchAndBound {//
     	
         
         Collections.sort(babItems, Item.byRatio());//Items sorted by value/weight
+        Item special = babItems.get(0);
+        this.bnbSpecial=bnbCapacity/special.weight;
         
         Node best = new Node();//the node with the current best solution
         Node root = new Node();//the node that is the root of the state space
         root.computeBound();
         
-        PriorityQueue<Node> q = new PriorityQueue<Node>();
+     PriorityQueue<Node> q = new PriorityQueue<Node>();
         //priority queue used to store the nodes. It will give priority to node with the most promise
         q.offer(root);
         
+        
         while (!q.isEmpty()) {
+        	System.out.println(q.size());
+        	
            Node node = q.poll();
            int i=0;
                 
@@ -197,18 +256,29 @@ public class BranchAndBound {//
                i++;
         	   }while(i<babItems.size());
            }
+         
+          
+           
 //           Iterator<Node> iter =q.iterator();
 //           
-//           if(q.size()>100){
+//          
 //           while (iter.hasNext()) {
 //           Node    current = iter.next();
 //           if(current.nodebound<=best.nodevalue){
 //        	   q.remove(current);
+//        	   counter++;
+//        	   System.out.println("rmoved" + counter);
 //           }
 //               // do something with current
 //           }
-//           }
-        }
+        	   
+        	
+        	   
+        	   
+
+           
+           }
+        
            
 
    
@@ -237,6 +307,7 @@ public class BranchAndBound {//
         builder.append(weight);
         builder.append("\n");
         builder.append("Take Items:");
+        builder.append("\n");
         
        Collections.sort(items, Item.byLabel());
         
@@ -246,11 +317,37 @@ public class BranchAndBound {//
   		}
   		  System.out.println();
   	}
-        
+    	
+    	int currentLabel=items.get(0).label;
+    	int itemquantity=1;
+    	int firstgo=0;
+    	
         for (Item item : items) {
-           builder.append(item.label);//
-           builder.append("  ");
+        	if(firstgo!=0){
+        	if(item.label==currentLabel){
+        		itemquantity++;
+        	}
+        	else{
+        		 builder.append("Item: ");
+        	     builder.append(currentLabel);
+                 builder.append("  * ");
+                 builder.append(itemquantity);
+                 builder.append("\n");
+        		itemquantity=1;
+        		currentLabel=item.label;
+        	}
+        	}
+        	firstgo=1;
+      
         }
+     
+        	builder.append("Item: ");
+        	 builder.append(currentLabel);
+             builder.append("  * ");
+             builder.append(itemquantity);
+             builder.append("\n");
+        	
+      
         
         
         System.out.println(builder);
@@ -266,15 +363,15 @@ public class BranchAndBound {//
     	 final long startTime = System.currentTimeMillis();
     		ArrayList<Item> items = new ArrayList<Item>();//Items to be fitted inside the map
     	
-    		items.add(new Item(3,1,2,1));
+    		items.add(new Item(1,1,1,1));
     		items.add(new Item(8,2,2,2));
-    	//	items.add(new Item(4,3,1,3));
+    		//items.add(new Item(4,3,1,3));
     	//	items.add(new Item(3,4,2,4));
     	//	items.add(new Item(4,8,2,5));
     		
-    		int square[][] = new int[5][6];//Dimensions of the map
+    		int square[][] = new int[6][6];//Dimensions of the map
     		Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
-    		Graph.colourSquare(square, 3, 4);
+    		//Graph.colourSquare(square, 3, 4);
     	//	Graph.colourSquare(square, 5, 2);
     	BranchAndBound x = new BranchAndBound(items, square)	;
     	x.solve();

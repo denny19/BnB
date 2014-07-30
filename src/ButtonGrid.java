@@ -99,15 +99,7 @@ public class ButtonGrid implements  ActionListener{
         	   resultArea.setText(d.returnSol());
         	   
            }
-        		
-                	
-                
-           
         
-        
-        
-        	
-                
         	else{
           
             for(int x=0; x<width; x++){
@@ -138,10 +130,10 @@ public class ButtonGrid implements  ActionListener{
             titlePanel = new JPanel();
             titlePanel.setLayout(null);
             titlePanel.setLocation(20, 50);
-            titlePanel.setSize(550, 500);
+            titlePanel.setSize(42*(length+4),42*(width+3));
             totalGUI.add(titlePanel);
-            resultArea.setLocation(60,500);
-            resultArea.setSize(400,250);
+            resultArea.setLocation(60,42*(width+5));
+            resultArea.setSize(350,250);
             totalGUI.add(resultArea);
         
         //    componentPanel.setLayout(new FlowLayout());
@@ -157,8 +149,8 @@ public class ButtonGrid implements  ActionListener{
             
             
             calButton = new JButton("Calculate!");
-           calButton.setLocation(60, 400);
-            calButton.setSize(250, 30);
+           calButton.setLocation(60, 42*(width+1));
+            calButton.setSize(150, 30);
             calButton.addActionListener(this);
             titlePanel.add(calButton);
             
@@ -177,7 +169,7 @@ public class ButtonGrid implements  ActionListener{
             
             itemPanel = new JPanel();
             itemPanel.setLayout(null);
-            itemPanel.setLocation(600, 50);
+            itemPanel.setLocation(42*(length+5), 50);
             itemPanel.setSize(400, 300);
             totalGUI.add(itemPanel);
             
@@ -226,7 +218,14 @@ public class ButtonGrid implements  ActionListener{
             
             componentPanel = new JPanel();
             componentPanel.setLayout(new FlowLayout());
-            componentPanel.setLocation(600,300);
+            if(length<11){
+            	 componentPanel.setLocation(450,200);
+            }
+            else{
+            	componentPanel.setLocation(42*(length+3),200);
+            }
+            	
+            
             componentPanel.setSize(500, 500);  
             totalGUI.add( componentPanel);
        
@@ -240,10 +239,11 @@ public class ButtonGrid implements  ActionListener{
         	
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
               //  frame.setSize(400, 400);
-               frame.pack(); //sets appropriate size for frame
+             //  frame.pack(); //sets appropriate size for frame
+frame.setExtendedState( frame.getExtendedState()|JFrame.MAXIMIZED_BOTH );
                 frame.setVisible(true); //makes frame visible
         }
         public static void main(String[] args) {
-                new ButtonGrid(8,6);//makes new ButtonGrid with 2 parameters
+                new ButtonGrid(11,12);//makes new ButtonGrid with 2 parameters
         }
 }

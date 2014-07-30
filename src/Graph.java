@@ -75,28 +75,81 @@ public static boolean checkAndReplace(int[][] a, int[][] graph, int[][] tempGrap
     	
         for(int j = 0; j < tempGraph[i].length; j++){
    	
-            if(tempGraph[i][j] == 0){ //c[i][j] should match up with a[0][0].
+            if((tempGraph[i][j] == 0 ) || (tempGraph[i][j] == -2)){ //c[i][j] should match up with a[0][0].
                 // Start verifying the rest of A
-                boolean flag = true;
+                boolean flag = true; int atleastOnce=0;
                 for (int k = 0; k < a.length; k++) {
                     for (int l = 0; l < a[k].length; l++) {
                         if ((i+k) >= tempGraph.length || (j+l) >= tempGraph[i].length) {
                             flag = false;
                            break;
                         }
-                        if (tempGraph[i+k][j+l] != 0) {
+                        if (tempGraph[i+k][j+l] != 0  && tempGraph[i+k][j+l] != -2) {
                             flag = false;
+                        }
+                        else{
+                        	if(tempGraph[i+k][j+l] == 0){
+                        		atleastOnce++;
+                        	}
                         }
                     }
                 }
                 // If there are free spaces then place pattern a inside tempGraph
-                if (flag) {
+                if (flag && atleastOnce>0) {
                     for (int k = 0; k < a.length; k++) {
                         for (int l = 0; l < a[k].length; l++) {
-                            tempGraph[i+k][j+l] = a[0][0];
+                            tempGraph[i+k][j+l] = -2;
                             graph[i+k][j+l]=a[0][0];
                         }
                     }
+                   return true;
+                }
+                
+                
+            }
+         
+    }
+    
+
+    
+    
+}
+    return false;
+}
+
+public static boolean checkAndReplace(int[][] a, int[][] tempGraph){
+	
+    for(int i = 0; i < tempGraph.length; i++){
+    	
+        for(int j = 0; j < tempGraph[i].length; j++){
+   	
+            if((tempGraph[i][j] == 0 ) ){ //c[i][j] should match up with a[0][0].
+                // Start verifying the rest of A
+                boolean flag = true; 
+                for (int k = 0; k < a.length; k++) {
+                    for (int l = 0; l < a[k].length; l++) {
+                        if ((i+k) >= tempGraph.length || (j+l) >= tempGraph[i].length) {
+                            flag = false;
+                           break;
+                        }
+                        if (tempGraph[i+k][j+l] != 0 ) {
+                            flag = false;
+                        }
+//                        else{
+//                        	if(tempGraph[i+k][j+l] == 0){
+//                        		atleastOnce++;
+//                        	}
+//                        }
+                    }
+                }
+                // If there are free spaces then place pattern a inside tempGraph
+                if (flag ) {
+//                    for (int k = 0; k < a.length; k++) {
+//                        for (int l = 0; l < a[k].length; l++) {
+//                            tempGraph[i+k][j+l] = 0;
+//                           // graph[i+k][j+l]=a[0][0];
+//                        }
+//                    }
                    return true;
                 }
                 
