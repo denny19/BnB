@@ -3,7 +3,7 @@
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class BranchAndBound {//
+public class temp {//
 	  private List<Item> babItems;//The items that needs to be fit inside the map
 	  private int areaGrid[][];//the Map of the area
 	  private int bnbCapacity;
@@ -97,7 +97,7 @@ public class BranchAndBound {//
 	    }
 		}
 	
-	public BranchAndBound (List<Item> items, int graph[][]) {//
+	public temp (List<Item> items, int graph[][]) {//
     	//The main program with data related to the items and data on how the graph looks like
         this.babItems = items;
         this.areaGrid=new int[graph.length][graph[0].length];
@@ -159,12 +159,22 @@ public class BranchAndBound {//
                    withHoriz.nodevalue += item.getValue();
                    withHoriz.computeBound();
                    //a new bound and new value is calculated for the node
-                   if (withHoriz.nodevalue > best.nodevalue) {
-                	   best = withHoriz;//if this solution was better the best solution found so far then change this solution to be the best
-                   }
-                   if (withHoriz.nodebound > best.nodevalue) {
-                      q.offer(withHoriz);//if this solution has a better bound than the bound for the best value
-                   }
+                   boolean sameGraph=false;
+            	   for( int dom[][]:g){
+            		   if(Graph.exactlySame(dom, withHoriz.nodeGraph)){
+            			   sameGraph=true;
+            			   break;
+            		   }
+            	   }
+            	   if(sameGraph==false){
+            		   if (withHoriz.nodevalue > best.nodevalue) {
+                           best = withHoriz;
+                        }
+                        if (withHoriz.nodebound > best.nodevalue) {
+                          q.offer(withHoriz);
+                        }
+                        g.add(withHoriz.nodeGraph);
+            	   }
                   
                    
                }
@@ -189,12 +199,24 @@ public class BranchAndBound {//
                    withVertical.nodevalue += item.getValue();
                    withVertical.computeBound();
                    //a new bound and new value is calculated for the node
-                   if (withVertical.nodevalue > best.nodevalue) {
-                      best = withVertical;
-                   }
-                   if (withVertical.nodebound > best.nodevalue) {
-                     q.offer(withVertical);
-                   }   
+                  
+         		  boolean sameGraph=false;
+            	   for( int dom[][]:g){
+            		   if(Graph.exactlySame(dom, withVertical.nodeGraph)){
+            			   sameGraph=true;
+            			   break;
+            		   }
+            	   }
+            	   if(sameGraph==false){
+            		   if (withVertical.nodevalue > best.nodevalue) {
+                           best = withVertical;
+                        }
+                        if (withVertical.nodebound > best.nodevalue) {
+                          q.offer(withVertical);
+                        }
+                        g.add(withVertical.nodeGraph);
+            	   }
+                   
                }
            	   else{cantReplace=false;}
             	   
