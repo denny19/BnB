@@ -20,13 +20,13 @@ public class BranchAndBound {//
 		public double nodevalue;//value already inside this node
 		public int nodeweight;//weight of the items already inside this node
 		public int nodeGraph[][];//the Map for this node with the nodes items fitted inside
-			
+		public int allowedItem;
 	public Node(){
 		//create a new Node for the root node
 		nodetakenItems = new ArrayList<Item>();
 		nodeGraph=new int [bnbI][bnbJ];
 		Graph.getACopy(nodeGraph, areaGrid);//the nodegraph is the same as the initial area map because no items are fit inside yet
-		
+		allowedItem=0;
 	}
 
 	
@@ -38,6 +38,7 @@ public class BranchAndBound {//
 		nodevalue= parent.nodevalue;//nodes value is the same as the parents
 		nodeweight= parent.nodeweight;//weight of the items inside this node is initially same as its parents
 		nodeGraph=new int [bnbI][bnbJ];//A new nodeGraph for this node
+		allowedItem=parent.allowedItem;
 		Graph.getACopy(nodeGraph, parent.nodeGraph);//nodes graph is initially the same as the parents
 	}
 	
@@ -45,11 +46,12 @@ public class BranchAndBound {//
 		//Used to create a node in the same level in the state space diagram
 		//this is useful when the same item is fit inside the Map in different orientations or different places.
 		nodelevel= Same.nodelevel ;
-		nodetakenItems = new ArrayList<Item>(Same.nodetakenItems);//
+		nodetakenItems = new ArrayList<Item>(Same.nodetakenItems);
 		nodebound= Same.nodebound;
 		nodevalue= Same.nodevalue;
 		nodeweight= Same.nodeweight;
 		nodeGraph=new int [bnbI][bnbJ];
+		allowedItem=Same.allowedItem;
 		Graph.getACopy(nodeGraph, Same.nodeGraph);
 	}
 	
@@ -64,7 +66,7 @@ public class BranchAndBound {//
 
 	 public void computeBound() {
 	    	//Used to compute the bound of a node
-	        int i = 0;
+	        int i = this.allowedItem;
 	        int k=0;
 	        int w = nodeweight;
 	        nodebound = nodevalue;//the nodebound is changed to the node value and then subsequent items from the items available are added
@@ -80,9 +82,6 @@ public class BranchAndBound {//
 	        	 if(  Graph.checkFits(item.getDimensions(),  nodeGraph)==false){
 	        		 break;	
 	        	 }
-	        	 if(  Graph.checkFits(item.getAltDimensions(),  nodeGraph)==false){ 
-        			 break; 
-        		 }
 	        	 firstTime=false;
 	           }
 	                    w += item.getWeight();//item is taken in the node
@@ -97,8 +96,9 @@ public class BranchAndBound {//
 	    }
 		}
 	
-	public BranchAndBound (List<Item> items, int graph[][]) {//
+	public BranchAndBound (ArrayList<Item> items, int graph[][]) {//
     	//The main program with data related to the items and data on how the graph looks like
+		Graph.doubleItems(items);
         this.babItems = items;
         this.areaGrid=new int[graph.length][graph[0].length];
        Graph.getACopy(areaGrid,graph );;
@@ -117,8 +117,7 @@ public class BranchAndBound {//
         root.computeBound();
         
      PriorityQueue<Node> q = new PriorityQueue<Node>();
- 	 ArrayList<int [][]> g = new ArrayList<int [][] >();
-  	
+	
 
         //priority queue used to store the nodes. It will give priority to node with the most promise
         q.offer(root); 
@@ -126,7 +125,7 @@ public class BranchAndBound {//
         	System.out.println(q.size());
         	
            Node node = q.poll();
-           int i=0;
+           int i=node.allowedItem;
                 
            if (node.nodebound > best.nodevalue ) {//if a better solution is available
         	   
@@ -157,6 +156,7 @@ public class BranchAndBound {//
                    //if the item could be added to the Map
                    withHoriz.nodetakenItems.add(item);
                    withHoriz.nodevalue += item.getValue();
+                   withHoriz.allowedItem=i;
                    withHoriz.computeBound();
                    //a new bound and new value is calculated for the node
                    if (withHoriz.nodevalue > best.nodevalue) {
@@ -174,33 +174,6 @@ public class BranchAndBound {//
                 }
         
         
-
-               if (with.nodeweight <= bnbCapacity && item.getIsSquare()==false ) {
-//           	   //add vertical as well
-            	   int tempGraph[][] = new int[bnbI][bnbJ];
-            	   Graph.getACopy(tempGraph,with.nodeGraph);
-            	   boolean cantReplace=true;
-            	   do{
-            		 //do loop used to make sure this item has been added in as many ways as possible in the vertical orientation
-            	   Node withVertical = new Node(with,true);
-            	   if(Graph.checkAndReplace(item.getAltDimensions(),withVertical.nodeGraph,tempGraph)==true){
-                   //Item tried to be added in the vertical orientation
-                   withVertical.nodetakenItems.add(item);
-                   withVertical.nodevalue += item.getValue();
-                   withVertical.computeBound();
-                   //a new bound and new value is calculated for the node
-                   if (withVertical.nodevalue > best.nodevalue) {
-                      best = withVertical;
-                   }
-                   if (withVertical.nodebound > best.nodevalue) {
-                     q.offer(withVertical);
-                   }   
-               }
-           	   else{cantReplace=false;}
-            	   
-            	   } while(cantReplace==true);
-                }
-          
                i++;
         	   }while(i<babItems.size());
         	   
@@ -295,11 +268,11 @@ public class BranchAndBound {//
     	 final long startTime = System.currentTimeMillis();
     		ArrayList<Item> items = new ArrayList<Item>();//Items to be fitted inside the map
     	
-    		items.add(new Item(3,1,2,1));
+    		items.add(new Item(3,1,3,1));
     		items.add(new Item(8,2,2,2));
     		
-    		int square[][] = new int[11][12];//Dimensions of the map
-    		Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
+    		int square[][] = new int[4][8];//Dimensions of the map
+    	Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
 
     	BranchAndBound x = new BranchAndBound(items, square)	;
     	x.solve();

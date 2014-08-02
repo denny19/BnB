@@ -16,6 +16,19 @@ public class Graph {
 	public static void colourSquare(int graph[][], int x, int y) {
 		graph[x][y] = -1;
 	}
+	
+	public static void doubleItems(ArrayList<Item> d){
+		ArrayList<Item> copy = new ArrayList<Item>(d);
+		for(Item temp:copy){
+			if(temp.getIsSquare()==true){
+				
+			}
+			else{
+				Item jk = new Item(temp);
+				d.add(jk);
+			}
+		}
+	}
 
 	public static int checkFreeSquare(int graph[][]) {
 		int numOfSquares = 0;

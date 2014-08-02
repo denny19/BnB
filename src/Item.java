@@ -44,6 +44,14 @@ public class Item {
 
 	}
 
+	public Item(Item item) {
+		this.value =item. value;
+		this.x =item. y;
+		this.label = item.label;//
+		this.y = item.x;
+		createItem();
+
+	}
 	public int getWeight() {
 		return weight;
 	}
