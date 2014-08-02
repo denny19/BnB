@@ -87,8 +87,8 @@ public class Graph {
 
 	// checks if pattern a will fit inside tempGraph. It checks for free squares
 	// denoted by 0;
-	public static boolean checkAndReplace(int[][] a, int[][] graph,int[][] tempGraph) {
-		for (int i = 0; i < tempGraph.length; i++) {
+	public static boolean checkAndReplace(int[][] a, int[][] graph,int[][] tempGraph,int[][] lastCordinates) {
+		for (int i = lastCordinates[0][0]; i < tempGraph.length; i++) {
 			for (int j = 0; j < tempGraph[i].length; j++) {
 				if ((tempGraph[i][j] == 0) || (tempGraph[i][j] == -2)) { 
 					// Start verifying the rest of A
@@ -117,6 +117,8 @@ public class Graph {
 							for (int l = 0; l < a[k].length; l++) {
 								tempGraph[i + k][j + l] = -2;
 								graph[i + k][j + l] = a[0][0];
+								lastCordinates[0][0]=(i+k);
+								lastCordinates[0][1]=(j+l);
 							}
 						}
 						return true;

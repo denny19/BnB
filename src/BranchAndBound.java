@@ -21,12 +21,14 @@ public class BranchAndBound {//
 		public int nodeweight;//weight of the items already inside this node
 		public int nodeGraph[][];//the Map for this node with the nodes items fitted inside
 		public int allowedItem;
+		public int lastCordinates[][];
 	public Node(){
 		//create a new Node for the root node
 		nodetakenItems = new ArrayList<Item>();
 		nodeGraph=new int [bnbI][bnbJ];
 		Graph.getACopy(nodeGraph, areaGrid);//the nodegraph is the same as the initial area map because no items are fit inside yet
 		allowedItem=0;
+		lastCordinates= new int[1][2];
 	}
 
 	
@@ -39,6 +41,7 @@ public class BranchAndBound {//
 		nodeweight= parent.nodeweight;//weight of the items inside this node is initially same as its parents
 		nodeGraph=new int [bnbI][bnbJ];//A new nodeGraph for this node
 		allowedItem=parent.allowedItem;
+		lastCordinates=new int[1][2];
 		Graph.getACopy(nodeGraph, parent.nodeGraph);//nodes graph is initially the same as the parents
 	}
 	
@@ -52,6 +55,7 @@ public class BranchAndBound {//
 		nodeweight= Same.nodeweight;
 		nodeGraph=new int [bnbI][bnbJ];
 		allowedItem=Same.allowedItem;
+		lastCordinates=Same.lastCordinates;
 		Graph.getACopy(nodeGraph, Same.nodeGraph);
 	}
 	
@@ -152,7 +156,7 @@ public class BranchAndBound {//
             	   do{
             	 //do loop used to make sure this item has been added in as many ways as possible in the horizontal orientation
             	   Node withHoriz = new Node(with,true);
-            	   if(Graph.checkAndReplace(item.getDimensions(),withHoriz.nodeGraph,tempGraph)==true){
+            	   if(Graph.checkAndReplace(item.getDimensions(),withHoriz.nodeGraph,tempGraph,withHoriz.lastCordinates)==true){
                    //if the item could be added to the Map
                    withHoriz.nodetakenItems.add(item);
                    withHoriz.nodevalue += item.getValue();
@@ -271,8 +275,8 @@ public class BranchAndBound {//
     		items.add(new Item(3,1,3,1));
     		items.add(new Item(8,2,2,2));
     		
-    		int square[][] = new int[4][8];//Dimensions of the map
-    	Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
+    		int square[][] = new int[3][3];//Dimensions of the map
+    	Graph.colourSquare(square, 2, 0);//To colour a certain square to make it redundant
 
     	BranchAndBound x = new BranchAndBound(items, square)	;
     	x.solve();
