@@ -21,18 +21,16 @@ public class BranchAndBound {//
 		public int nodeweight;//weight of the items already inside this node
 		public int nodeGraph[][];//the Map for this node with the nodes items fitted inside
 		public int allowedItem;
-		public int lastCordinates[][];
 	public Node(){
 		//create a new Node for the root node
 		nodetakenItems = new ArrayList<Item>();
 		nodeGraph=new int [bnbI][bnbJ];
 		Graph.getACopy(nodeGraph, areaGrid);//the nodegraph is the same as the initial area map because no items are fit inside yet
 		allowedItem=0;
-		lastCordinates= new int[1][2];
 	}
 
 	
-	public Node(Node parent,boolean traue){
+	public Node(Node parent){
 		//Create a new node from a parent node in the state space
 		nodelevel= parent.nodelevel + 1;//child nodes level is one more than its parent
 		nodetakenItems = new ArrayList<Item>(parent.nodetakenItems);//this node initially contains the same takenitems as its parents
@@ -41,12 +39,10 @@ public class BranchAndBound {//
 		nodeweight= parent.nodeweight;//weight of the items inside this node is initially same as its parents
 		nodeGraph=new int [bnbI][bnbJ];//A new nodeGraph for this node
 		allowedItem=parent.allowedItem;
-		lastCordinates=new int[1][2];
-		Graph.getACopy(lastCordinates,parent.lastCordinates);
 		Graph.getACopy(nodeGraph, parent.nodeGraph);//nodes graph is initially the same as the parents
 	}
 	
-	public Node(Node Same){
+	public Node(Node Same,boolean k){
 		//Used to create a node in the same level in the state space diagram
 		//this is useful when the same item is fit inside the Map in different orientations or different places.
 		nodelevel= Same.nodelevel ;
@@ -56,7 +52,6 @@ public class BranchAndBound {//
 		nodeweight= Same.nodeweight;
 		nodeGraph=new int [bnbI][bnbJ];
 		allowedItem=Same.allowedItem;
-		lastCordinates=new int[1][2];
 		Graph.getACopy(nodeGraph, Same.nodeGraph);
 	}
 	
@@ -84,7 +79,7 @@ public class BranchAndBound {//
 	           item = babItems.get(i);
 	           if (w + item.getWeight() > bnbCapacity) break;
 	           if(firstTime==true){
-	        	 if(  Graph.checkFits(item.getDimensions(),  nodeGraph,lastCordinates)==false){
+	        	 if(  Graph.checkFits(item.getDimensions(),  nodeGraph)==false){
 	        		 break;	
 	        	 }
 	        	 firstTime=false;
@@ -134,21 +129,18 @@ public class BranchAndBound {//
                 
            if (node.nodebound > best.nodevalue ) {//if a better solution is available
         	   
-        	   Node with = new Node(node,true);
-        	   int defa=i;
+        	   Node with = new Node(node);
         	   do{
         	   
         	   //an item is added to the state space to see if it gives a better solution
-        	  
+        	   
                Item item = babItems.get(i);//
-               if(i==defa){
+               if(i==0){
             	   
                }
                else{
             	   with.nodeweight-=babItems.get(i-1).getWeight();
-            	   with.lastCordinates=new int[1][2];
                }
-               
                with.nodeweight += item.getWeight();
              
                if (with.nodeweight <= bnbCapacity) {
@@ -157,13 +149,10 @@ public class BranchAndBound {//
             	   int tempGraph[][] = new int[bnbI][bnbJ];
             	   Graph.getACopy(tempGraph,with.nodeGraph);
             	   boolean cantReplace=true;
-            	   boolean waat=true;
-            	
             	   do{
             	 //do loop used to make sure this item has been added in as many ways as possible in the horizontal orientation
-            		 
-            	   Node withHoriz = new Node(with);
-            	   if(Graph.checkAndReplace(item.getDimensions(),withHoriz.nodeGraph,tempGraph,withHoriz.lastCordinates)==true){
+            	   Node withHoriz = new Node(with,true);
+            	   if(Graph.checkAndReplace(item.getDimensions(),withHoriz.nodeGraph,tempGraph)==true){
                    //if the item could be added to the Map
                    withHoriz.nodetakenItems.add(item);
                    withHoriz.nodevalue += item.getValue();
@@ -279,16 +268,12 @@ public class BranchAndBound {//
     	 final long startTime = System.currentTimeMillis();
     		ArrayList<Item> items = new ArrayList<Item>();//Items to be fitted inside the map
     	
-    	//	items.add(new Item(3,1,3,1));
-    		//items.add(new Item(8,2,2,2));
-    		items.add(new Item(8,1,3,3));
-    		items.add(new Item(3,1,2,2));
-    		items.add(new Item(1,1,1,1));
+    		items.add(new Item(3,1,3,1));
+    		items.add(new Item(8,2,2,2));
     		
-    		int square[][] = new int[1][11];//Dimensions of the map
-   	Graph.colourSquare(square, 0, 3);//To colour a certain square to make it redundant
-   	Graph.colourSquare(square, 0, 6);
-   	Graph.colourSquare(square, 0, 9);
+    		int square[][] = new int[4][8];//Dimensions of the map
+    	Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
+
     	BranchAndBound x = new BranchAndBound(items, square)	;
     	x.solve();
     	final long endTime = System.currentTimeMillis();

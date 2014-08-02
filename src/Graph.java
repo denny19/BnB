@@ -87,14 +87,9 @@ public class Graph {
 
 	// checks if pattern a will fit inside tempGraph. It checks for free squares
 	// denoted by 0;
-	public static boolean checkAndReplace(int[][] a, int[][] graph,int[][] tempGraph,int[][] lastCordinates) {
-		boolean firstTime=true;
-		for (int i = lastCordinates[0][1]; i < tempGraph.length; i++) {
-			for (int j = lastCordinates[0][1]; j < tempGraph[i].length; j++) {
-				if(firstTime==true){
-					j=lastCordinates[0][1];
-					firstTime=false;
-				}
+	public static boolean checkAndReplace(int[][] a, int[][] graph,int[][] tempGraph) {
+		for (int i = 0; i < tempGraph.length; i++) {
+			for (int j = 0; j < tempGraph[i].length; j++) {
 				if ((tempGraph[i][j] == 0) || (tempGraph[i][j] == -2)) { 
 					// Start verifying the rest of A
 					boolean flag = true;
@@ -122,11 +117,8 @@ public class Graph {
 							for (int l = 0; l < a[k].length; l++) {
 								tempGraph[i + k][j + l] = -2;
 								graph[i + k][j + l] = a[0][0];
-								lastCordinates[0][0]=(i+k);
-								lastCordinates[0][1]=(j+l);
 							}
 						}
-					
 						return true;
 					}
 
@@ -138,15 +130,12 @@ public class Graph {
 		return false;
 	}
 
-	public static boolean checkFits(int[][] a, int[][] tempGraph,int[][] lastCordinates) {
-		boolean firstTime=true;
-		for (int i = lastCordinates[0][0]; i < tempGraph.length; i++) {
+	public static boolean checkFits(int[][] a, int[][] tempGraph) {
+
+		for (int i = 0; i < tempGraph.length; i++) {
 
 			for (int j = 0; j < tempGraph[i].length; j++) {
-				if(firstTime==true){
-					j=lastCordinates[0][1];
-					firstTime=false;
-				}
+
 				if ((tempGraph[i][j] == 0)) {
 					boolean flag = true;
 					for (int k = 0; k < a.length; k++) {
@@ -174,19 +163,6 @@ public class Graph {
 		}
 		return false;
 	}
-	
-	public static int checkWeight(int graph[][],int[][] lastCord, int label) {
-		int countFreeSquares=0;
-		for (int i = 0; i < lastCord[0][0]; i++) {
-			for (int j = 0; j < graph[i].length; j++) {
-				if (graph[i][j] == 0) {
-					countFreeSquares++;;
-				}
-			}
-		}
-		return countFreeSquares;
-	}
-	
 	   public static void main(String args[]){
 	    	
 		  
