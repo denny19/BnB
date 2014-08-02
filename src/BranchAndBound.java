@@ -130,12 +130,13 @@ public class BranchAndBound {//
            if (node.nodebound > best.nodevalue ) {//if a better solution is available
         	   
         	   Node with = new Node(node);
+        	   int firstItem=i;
         	   do{
         	   
         	   //an item is added to the state space to see if it gives a better solution
         	   
                Item item = babItems.get(i);//
-               if(i==0){
+               if(firstItem==i){
             	   
                }
                else{
@@ -271,7 +272,7 @@ public class BranchAndBound {//
     		items.add(new Item(3,1,3,1));
     		items.add(new Item(8,2,2,2));
     		
-    		int square[][] = new int[4][8];//Dimensions of the map
+    		int square[][] = new int[1][7];//Dimensions of the map
     	Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
 
     	BranchAndBound x = new BranchAndBound(items, square)	;
@@ -282,5 +283,4 @@ public class BranchAndBound {//
      }
     
   }
-
 
