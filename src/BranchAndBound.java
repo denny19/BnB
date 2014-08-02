@@ -32,7 +32,7 @@ public class BranchAndBound {//
 	}
 
 	
-	public Node(Node parent){
+	public Node(Node parent,boolean traue){
 		//Create a new node from a parent node in the state space
 		nodelevel= parent.nodelevel + 1;//child nodes level is one more than its parent
 		nodetakenItems = new ArrayList<Item>(parent.nodetakenItems);//this node initially contains the same takenitems as its parents
@@ -42,10 +42,11 @@ public class BranchAndBound {//
 		nodeGraph=new int [bnbI][bnbJ];//A new nodeGraph for this node
 		allowedItem=parent.allowedItem;
 		lastCordinates=new int[1][2];
+		Graph.getACopy(lastCordinates,parent.lastCordinates);
 		Graph.getACopy(nodeGraph, parent.nodeGraph);//nodes graph is initially the same as the parents
 	}
 	
-	public Node(Node Same,boolean k){
+	public Node(Node Same){
 		//Used to create a node in the same level in the state space diagram
 		//this is useful when the same item is fit inside the Map in different orientations or different places.
 		nodelevel= Same.nodelevel ;
@@ -55,7 +56,7 @@ public class BranchAndBound {//
 		nodeweight= Same.nodeweight;
 		nodeGraph=new int [bnbI][bnbJ];
 		allowedItem=Same.allowedItem;
-		lastCordinates=Same.lastCordinates;
+		lastCordinates=new int[1][2];
 		Graph.getACopy(nodeGraph, Same.nodeGraph);
 	}
 	
@@ -83,7 +84,7 @@ public class BranchAndBound {//
 	           item = babItems.get(i);
 	           if (w + item.getWeight() > bnbCapacity) break;
 	           if(firstTime==true){
-	        	 if(  Graph.checkFits(item.getDimensions(),  nodeGraph)==false){
+	        	 if(  Graph.checkFits(item.getDimensions(),  nodeGraph,lastCordinates)==false){
 	        		 break;	
 	        	 }
 	        	 firstTime=false;
@@ -133,18 +134,21 @@ public class BranchAndBound {//
                 
            if (node.nodebound > best.nodevalue ) {//if a better solution is available
         	   
-        	   Node with = new Node(node);
+        	   Node with = new Node(node,true);
+        	   int defa=i;
         	   do{
         	   
         	   //an item is added to the state space to see if it gives a better solution
-        	   
+        	  
                Item item = babItems.get(i);//
-               if(i==0){
+               if(i==defa){
             	   
                }
                else{
             	   with.nodeweight-=babItems.get(i-1).getWeight();
+            	   with.lastCordinates=new int[1][2];
                }
+               
                with.nodeweight += item.getWeight();
              
                if (with.nodeweight <= bnbCapacity) {
@@ -153,9 +157,12 @@ public class BranchAndBound {//
             	   int tempGraph[][] = new int[bnbI][bnbJ];
             	   Graph.getACopy(tempGraph,with.nodeGraph);
             	   boolean cantReplace=true;
+            	   boolean waat=true;
+            	
             	   do{
             	 //do loop used to make sure this item has been added in as many ways as possible in the horizontal orientation
-            	   Node withHoriz = new Node(with,true);
+            		 
+            	   Node withHoriz = new Node(with);
             	   if(Graph.checkAndReplace(item.getDimensions(),withHoriz.nodeGraph,tempGraph,withHoriz.lastCordinates)==true){
                    //if the item could be added to the Map
                    withHoriz.nodetakenItems.add(item);
@@ -272,12 +279,16 @@ public class BranchAndBound {//
     	 final long startTime = System.currentTimeMillis();
     		ArrayList<Item> items = new ArrayList<Item>();//Items to be fitted inside the map
     	
-    		items.add(new Item(3,1,3,1));
-    		items.add(new Item(8,2,2,2));
+    	//	items.add(new Item(3,1,3,1));
+    		//items.add(new Item(8,2,2,2));
+    		items.add(new Item(8,1,3,3));
+    		items.add(new Item(3,1,2,2));
+    		items.add(new Item(1,1,1,1));
     		
-    		int square[][] = new int[3][3];//Dimensions of the map
-    	Graph.colourSquare(square, 2, 0);//To colour a certain square to make it redundant
-
+    		int square[][] = new int[1][11];//Dimensions of the map
+   	Graph.colourSquare(square, 0, 3);//To colour a certain square to make it redundant
+   	Graph.colourSquare(square, 0, 6);
+   	Graph.colourSquare(square, 0, 9);
     	BranchAndBound x = new BranchAndBound(items, square)	;
     	x.solve();
     	final long endTime = System.currentTimeMillis();
