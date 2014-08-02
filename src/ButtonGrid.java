@@ -11,19 +11,20 @@ import java.util.ArrayList;
 public class ButtonGrid implements ActionListener {
 
 	JFrame frame; // creates frame
-	JPanel titlePanel, itemPanel, componentPanel;//creates panels for items to be places inside
-	JButton[][] grid; // names the grid of buttons that represents the area map
+	JPanel titlePanel, itemPanel, componentPanel;
+	JButton[][] grid; // names the grid of buttons
 	// JButton[][] itemGrid;
-	int width, height;//width and height of the area map
-	JButton resetButton, calButton, addButton, dButton, remButton;//buttons used inside the program
+	int width, height;
+	JButton resetButton, calButton, addButton, dButton, remButton;
 	JLabel heightL, widthL, benefitL;
-	JTextField widthTF, heightTF, benefitTF;//Text fields used to obtain information about an item
-	int widthC, heightC, benefitC;//int versions of the text fields
+	JTextField widthTF, heightTF, benefitTF;
+	JPanel item;
+	int widthC, heightC, benefitC;
 	JPanel totalGUI;
-	JButton itemGrid2[] = new JButton[80];//Used to display the items
+	JButton itemGrid2[] = new JButton[80];
 	Integer counter = 1;
-	ArrayList<Item> items = new ArrayList<Item>();//The arraylist of items that will be the parameter to the branch and bound algorithm
-	JTextArea resultArea = new JTextArea();//Displays the results obtained from the algorithm
+	ArrayList<Item> items = new ArrayList<Item>();
+	JTextArea resultArea = new JTextArea();
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == resetButton) {
@@ -224,6 +225,6 @@ public class ButtonGrid implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new ButtonGrid(6, 6);// makes new ButtonGrid with 2 parameters
+		new ButtonGrid(11, 12);// makes new ButtonGrid with 2 parameters
 	}
 }
