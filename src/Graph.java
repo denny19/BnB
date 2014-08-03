@@ -84,6 +84,19 @@ public class Graph {
 			}
 		}
 	}
+	
+	public static void replaceLabels(int ia[][], int ib[][],int label) {
+
+		for (int i = 0; i < ia.length; i++) {
+			for (int j = 0; j < ia[i].length; j++) {
+				if(ib[i][j]==-2){
+					ia[i][j]=label;
+				}
+
+			}
+		}
+	}
+	
 
 	// checks if pattern a will fit inside tempGraph. It checks for free squares
 	// denoted by 0;

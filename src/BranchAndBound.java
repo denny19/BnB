@@ -150,14 +150,22 @@ public class BranchAndBound {//
             	   int tempGraph[][] = new int[bnbI][bnbJ];
             	   Graph.getACopy(tempGraph,with.nodeGraph);
             	   boolean cantReplace=true;
+            	   int noOfTimes=0;
+            	   int itemWeight=item.getWeight();
+            	   int label=item.getLabel();
             	   do{
             	 //do loop used to make sure this item has been added in as many ways as possible in the horizontal orientation
             	   Node withHoriz = new Node(with,true);
             	   if(Graph.checkAndReplace(item.getDimensions(),withHoriz.nodeGraph,tempGraph)==true){
+            		   noOfTimes++;
                    //if the item could be added to the Map
                    withHoriz.nodetakenItems.add(item);
                    withHoriz.nodevalue += item.getValue();
                    withHoriz.allowedItem=i;
+                   if(noOfTimes>1){
+                	   withHoriz.nodeweight+=(noOfTimes*itemWeight);
+                	   Graph.replaceLabels(withHoriz.nodeGraph,tempGraph,label);
+                   }
                    withHoriz.computeBound();
                    //a new bound and new value is calculated for the node
                    if (withHoriz.nodevalue > best.nodevalue) {
@@ -269,10 +277,11 @@ public class BranchAndBound {//
     	 final long startTime = System.currentTimeMillis();
     		ArrayList<Item> items = new ArrayList<Item>();//Items to be fitted inside the map
     	
+    		items.add(new Item(12,1,3,1));
     		items.add(new Item(3,1,3,1));
-    		items.add(new Item(8,2,2,2));
+    		items.add(new Item(1,1,2,2));
     		
-    		int square[][] = new int[1][7];//Dimensions of the map
+    		int square[][] = new int[17][18];//Dimensions of the map
     	Graph.colourSquare(square, 0, 2);//To colour a certain square to make it redundant
 
     	BranchAndBound x = new BranchAndBound(items, square)	;
